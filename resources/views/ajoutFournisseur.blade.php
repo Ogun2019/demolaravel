@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Nouveau fournisseur') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="http://monappli:3232/fournisseur/ajout">
+                    <form method="POST" action="http://monappli:3232/ajout_fournisseur">
                         @csrf
 
                         <div class="form-group row">
