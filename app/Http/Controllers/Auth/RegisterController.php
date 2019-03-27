@@ -36,6 +36,8 @@ use RegistersUsers;
      */
     public function __construct() {
         //$this->middleware('guest');
+        $this->middleware('auth');
+        $this->middleware('is_admin');
     }
 
     /**
@@ -63,8 +65,8 @@ use RegistersUsers;
                     'name' => $data['name'],
                     'email' => $data['email'],
                     'password' => Hash::make($data['password']),
-                    //'type' => $data['type'],
-                    'type' => User::DEFAULT_TYPE,
+                    'type' => $data['type'],
+                    //'type' => User::DEFAULT_TYPE,
         ]);
     }
 

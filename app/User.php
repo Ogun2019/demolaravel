@@ -14,6 +14,7 @@ class User extends Authenticatable {
     const ADMIN_TYPE = 'admin';
     const DEFAULT_TYPE = 'default';
     const MANAGER_TYPE = 'manager';
+    const SCLIENT_TYPE = 'sclient';
 
     /**
      * The attributes that are mass assignable.
@@ -44,10 +45,6 @@ class User extends Authenticatable {
 
     public function isAdmin() {
         return $this->type === self::ADMIN_TYPE;
-    }
-
-    public function isManager() {
-        return $this->type === self::MANAGER_TYPE;
     }
 
 }

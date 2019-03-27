@@ -12,7 +12,7 @@
                         @csrf
 
                         <div class="form-group row">
-                            <label for="fournisseur_nom" class="col-md-4 col-form-label text-md-right">{{ __('Nom fournisseur') }}</label>
+                            <label for="fournisseur_nom" class="col-md-4 col-form-label text-md-right">{{ __('Nom du fournisseur') }}</label>
 
                             <div class="col-md-6">
                                 <input id="fournisseur_nom" type="text" class="form-control{{ $errors->has('fournisseur_nom') ? ' is-invalid' : '' }}" name="fournisseur_nom" value="{{ old('fournisseur_nom') }}" required autofocus>

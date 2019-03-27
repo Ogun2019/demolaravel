@@ -1,42 +1,56 @@
 <?php
 $nbrassistant = count($assistant);
 $nbrfourni = count($fourni);
+$actionsNbr = count($actions);
+$nbruserg = count($usergroupe);
 ?>
+@push('scripts')
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/localization/messages_fr.js"></script>
+<!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />-->
+<link rel="stylesheet" href="css/easy-autocomplete.min.css"/>
+<script src="js/jquery.easy-autocomplete.min.js"></script>
+@endpush
+
 @extends('layouts.app')
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-12 bg-light p-6 rounded mt-5">
+        <div class="col-md-12 p-6 rounded mt-5">
             <h5 class="text-center text-light bg-success mb-2 p-2 rounded lead" id="result">multi-step</h5>
-            <!--<div class="progress mb-3" style="height:28px;">
+            <div class="progress mb-3" style="height:28px;">
                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" role="progressbar" style="width: 20%;" id="progressBar">
-                    <b class="lead" id="progressText">Étape-1</b>
+                    <b class="lead" id="progressText">25%</b>
                 </div>    
-            </div>-->
+            </div>
             <form action="" method="post" enctype="multipart/form-data" id="form-data">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="card mb-3">
                     <div class="card-body">
                         <div id="first">
-                            <h4 class="text-center p-1">Étape 1</h4>
+                            <h4 class="text-center p-1">Achat/détails des offres - Étape 1/4</h4>
                             <hr>
                             <div class="form-row">
+                                <!--<div class="col-12">
+                                    <label for="numaction" class="required">N° action</label>
+                                    <input name="numaction" type="number" class="form-control" id="numaction" placeholder="Le dernier n° est {{$achat[0]->nbraction}}">
+                                </div>-->
                                 <div class="col">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <label for="managerName" class="required">Category manager :</label>
                                     <select class="form-control required" id="manager" name="managerName" onchange="giveSelection(this.value)">
                                         <option value="">Selectionner un manager</option>
                                         @for($i=0;$i<$manager->count();$i++)
-                                        <option groupe='{{$manager[$i]->name}}' value="{{$manager[$i]->groupe}}">{{$manager[$i]->name}}</option>
+                                        <option groupe='{{$manager[$i]->id}}' value="{{$manager[$i]->id}}">{{$manager[$i]->name}}</option>
                                         @endfor
                                         <input type='hidden' id="grp" name="grp" value="" />
                                     </select>
                                 </div>
                                 <div class="col">
-                                    <label for="assistant" class="required">Assistant :</label>
-                                    <select name="assistantName" class="form-control" id="assistant" required>
-                                        @for($i=0;$i<$nbrassistant;$i++)
-                                        <option data-option="{{$assistant[$i]->groupe}}">{{$assistant[$i]->name}}</option>
+                                    <label for="assistant">Assistant :</label>
+                                    <select name="assistantName" class="form-control" id="assistant">
+                                        @for($i=0;$i<$usergroupe->count();$i++)
+                                        <option value="{{$usergroupe[$i]->idass}}" data-option="{{$usergroupe[$i]->supass}}">{{$usergroupe[$i]->nameass}}</option>
                                         @endfor
                                     </select>
                                 </div>
@@ -47,14 +61,21 @@ $nbrfourni = count($fourni);
                                     <select class="custom-select" id="fournisseur" name="fournisseur" required>
                                         <option selected="" value="" >Sélectionner un fournisseur</option>
                                         @for($i=0;$i<$nbrfourni;$i++)
-                                        <option value="{{$fourni[$i]->fournisseur_nom}}" >{{$fourni[$i]->fournisseur_nom}}</option>
+                                        <option value="{{$fourni[$i]->id_fournisseur}}" >{{$fourni[$i]->fournisseur_nom}}</option>
                                         @endfor
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="intituleAction" class="required">Intitulé de l'action :</label>
+                                    <select class="custom-select" id="intituleAction" name="intituleAction" required>
+                                        <option selected="" value="" >Sélectionner l'intitulé de l'action</option>
+                                        @for($i=0;$i<$actionsNbr;$i++)
+                                        <option value="{{$actions[$i]->id_action}}" >{{$actions[$i]->nom_action}}</option>
+                                        @endfor
+                                    </select>
+                                    <!--<label for="intituleAction" class="required">Intitulé de l'action :</label>
                                     <input name="intituleAction" type="text" class="form-control" id="intituleAction" placeholder="Ex : Play Doh deuxième à -50%">
-                                    <b class="form-text text-danger" id="intituleActionError" ></b>
+                                    <b class="form-text text-danger" id="intituleActionError" ></b>-->
                                 </div>
                             </div>
                             <div class="form-row">
@@ -71,9 +92,26 @@ $nbrfourni = count($fourni);
                             </div>
                             <div class="form-row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="epuisement" class="required">Jusqu'a épuisement oui/non :</label>
-                                    <input class="form-control" id="epuisement" name="epuisement" type="text" placeholder="oui / non">
-                                    <b class="form-text text-danger" id="epuisementError" ></b>
+                                    <label for="presenceCat">Présence catalogue</label>
+                                    <select class="custom-select" id="presenceCat" name="presenceCat" required>
+                                        <option selected="" value="" >Sélectionner un catalogue</option>
+                                        <option value="C01">C01</option>
+                                        <option value="C02">C02</option>
+                                        <option value="C03">C03</option>
+                                        <option value="C04">C04</option>
+                                        <option value="C05">C05</option>
+                                        <option value="C06">C06</option>
+                                        <option value="C07">C07</option>
+                                        <option value="C08">C08</option>
+                                        <option value="C09">C09</option>
+                                        <option value="C10">C10</option>
+                                        <option value="C11">C11</option>
+                                        <option value="C12">C12</option>
+                                        <option value="Pas en catalogue : instore & web">Pas en catalogue : instore & web</option>
+                                        <option value="Exclu web">Exclu web</option>
+                                    </select>
+                                    <!--<input class="form-control" type="text" id="presenceCat" name="presenceCat" placeholder="oui / non (préciser) Ex: C001 :" required>-->
+                                    <b class="form-text text-danger" id="presenceCatError"></b>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="numeroSemaine" class="required">N° de semaine du début d'action :</label>
@@ -86,38 +124,50 @@ $nbrfourni = count($fourni);
                             </div>
                         </div>
                         <div id="second">
-                            <h4 class="text-center p-1">Étape 2</h4>
+                            <h4 class="text-center p-1">Achat/détails des offres - Étape 2/4</h4>
                             <hr>
                             <div class="form-row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="valableFr" >Valable en France oui/non :</label>
-                                    <input class="form-control" name="valableFr" id="valableFr" type="text" placeholder="oui / non" required>
+                                    <label for="valableFr" >Valable en France oui/non :</label><br/>
+                                    <!--<input class="form-control" name="valableFr" id="valableFr" type="text" placeholder="oui / non" required>-->
+                                    <input type="radio" name="valableFr" id="valableFr" value="Oui">Oui<br/>
+                                    <input type="radio" name="valableFr" id="valableFr" value="Non">Non
                                     <b class="form-text text-danger" id="valableFrError" ></b>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="valableBe">Valable en Belgique oui/non :</label>
-                                    <input class="form-control" id="valableBe" name="valableBe" type="text" placeholder="oui / non" required>
-                                    <b class="form-text text-danger" id="valableBeError" ></b>
+                                    <label for="valableBe">Valable en Belgique oui/non :</label><br/>
+                                    <input type="radio" name="valableBe" id="valableBe" value="Oui">Oui<br/>
+                                    <input type="radio" name="valableBe" id="valableBe" value="Non">Non
+                                    <!--<input class="form-control" id="valableBe" name="valableBe" type="text" placeholder="oui / non" required>
+                                    <b class="form-text text-danger" id="valableBeError" ></b>-->
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="valableLux">Valable en Luxembourg oui/non :</label>
-                                    <input class="form-control" name="valableLux" id="valableLux" type="text" placeholder="oui / non" required>
+                                    <label for="valableLux">Valable en Luxembourg oui/non :</label><br/>
+                                    <!--<input class="form-control" name="valableLux" id="valableLux" type="text" placeholder="oui / non" required>-->
+                                    <input type="radio" name="valableLux" id="valableLux" value="Oui">Oui<br/>
+                                    <input type="radio" name="valableLux" id="valableLux" value="Non">Non
                                     <b class="form-text text-danger" id="valableLuxError"></b>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="valableSui">Valable en Suisse oui/non :</label>
-                                    <input class="form-control" id="valableSui" name="valableSui" type="text" placeholder="oui / non" required>
+                                    <label for="valableSui">Valable en Suisse oui/non :</label><br/>
+                                    <!--<input class="form-control" id="valableSui" name="valableSui" type="text" placeholder="oui / non" required>-->
+                                    <input type="radio" name="valableSui" id="valableSui" value="Oui">Oui<br/>
+                                    <input type="radio" name="valableSui" id="valableSui" value="Non">Non
                                     <b class="form-text text-danger" id="valableSuiError" ></b>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="valableIt">Valable en Italie oui/non :</label>
-                                    <input class="form-control" type="text" id="valableIt" name="valableIt" placeholder="oui / non" required>
+                                    <label for="valableIt">Valable en Italie oui/non :</label><br/>
+                                    <!--<input class="form-control" type="text" id="valableIt" name="valableIt" placeholder="oui / non" required>-->
+                                    <input type="radio" name="valableIt" id="valableIt" value="Oui">Oui<br/>
+                                    <input type="radio" name="valableIt" id="valableIt" value="Non">Non
                                     <b class="form-text text-danger" id="valableItError"></b>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="presenceCat">Présence catalogue oui/non (préciser) :</label>
-                                    <input class="form-control" type="text" id="presenceCat" name="presenceCat" placeholder="oui / non (préciser)" required>
-                                    <b class="form-text text-danger" id="presenceCatError"></b>
+                                    <label for="epuisement" class="required">Jusqu'a épuisement oui/non :</label><br/>
+                                    <input type="radio" id="epuisement" name="epuisement" value="Oui">Oui<br/>
+                                    <input type="radio" checked="checked" id="epuisement" name="epuisement" value="Non">Non
+                                    <!--<input class="form-control" id="epuisement" name="epuisement" type="text" placeholder="oui / non">-->
+                                    <b class="form-text text-danger" id="epuisementError" ></b>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -126,7 +176,7 @@ $nbrfourni = count($fourni);
                             </div>
                         </div>
                         <div id="third">
-                            <h4 class="text-center p-1">Étape 3</h4>
+                            <h4 class="text-center p-1">Achat/détails des offres - Étape 3/4</h4>
                             <hr>
                             <div class="form-row">
                                 <div class="col-md-6 mb-3">
@@ -147,7 +197,7 @@ $nbrfourni = count($fourni);
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="remise" class="required">Remise directe ou différée :</label>
-                                    <select class="custom-select" name="remise" id="remise" required>
+                                    <select class="custom-select" name="remise" id="remise" onchange="typeOfRemise(this.value)" required>
                                         <option value="">Selectionner la remise</option>
                                         <option value="Remise directe">Remise directe</option>
                                         <option value="Remise différée">Remise différée</option>
@@ -169,7 +219,7 @@ $nbrfourni = count($fourni);
                             </div>
                         </div>
                         <div id="fourth">
-                            <h4 class="text-center p-1">Étape 4</h4>
+                            <h4 class="text-center p-1">Achat/détails des offres - Étape 4/4</h4>
                             <hr>
                             <div class="form-row">
                                 <div class="col-md-6 mb-3">
@@ -178,9 +228,16 @@ $nbrfourni = count($fourni);
                                     <b class="form-text text-danger" id="plvFournisseurError"></b>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="detailplvFournisseur">Détail PLV Fournisseur : </label>
+                                    
+                                        <label for="detailplvFournisseur">Détail PLV Fournisseur: </label>
+                                        <input class="form-control" id="detailplvFournisseur" type="text" name="detailplvFournisseur" placeholder="Typologie de PLV : wobblers / A4 / flyers différés ..." required>
+                                        <div id="valeurList">
+                                        </div>
+
+                                    
+                                    <!--<label for="detailplvFournisseur">Détail PLV Fournisseur : </label>
                                     <input class="form-control" id="detailplvFournisseur" type="text" name="detailplvFournisseur" placeholder="Typologie de PLV : wobblers / A4 / flyers différés ..." required>
-                                    <b class="form-text text-danger" id="detailplvFournisseurError"></b>
+                                    <b class="form-text text-danger" id="detailplvFournisseurError"></b>-->
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="" class="required">F1 :</label>
@@ -217,12 +274,12 @@ $nbrfourni = count($fourni);
                                     <label for="commentairePlv" class="required">Commentaire PLV :</label>
                                     <input class="form-control" id="commentairePlv" type="text" name="comm_plv" placeholder="Quelle typologie doit recevoir cette PLV ?">
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div id="fileupload1" class="col-md-6 mb-3">
                                     <label for="flyerFile">Lien Visuel Flyer différé:</label><br/>
                                     <input type="file" id="flyerFile" name="flyerFile" size="50">
                                     <p id="demo"></p>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div id="fileupload2" class="col-md-6 mb-3">
                                     <label for="plvFile">Lien vers Visuel PLV si provient du fournisseur :</label>
                                     <input type="file" id="plvFile" name="plvFile" size="50" >
                                     <p id="demo"></p>
@@ -244,7 +301,60 @@ $nbrfourni = count($fourni);
 
 
 </div>
+
 <script>
+    var options = {
+        url: "{{route('autocomplete.fetch')}}",
+
+        getValue: "details_action",
+
+        list: {
+            match: {
+                enabled: true
+            }
+        }
+    };
+    $("#detailplvFournisseur").easyAutocomplete(options);
+    $('#detailAction').easyAutocomplete(options);
+
+    /*$("#detailplvFournisseur").autocomplete({
+     
+     source: //"{{route('autocomplete.fetch')}}"
+     });*/
+
+
+    /*$('#detailplvFournisseur').keyup(function () {
+     var query = $(this).val();
+     if (query != '')
+     {
+     var _token = $('input[name="_token"]').val();
+     $.ajax({
+     url: "{{ route('autocomplete.fetch') }}",
+     method: "POST",
+     data: {query: query, _token: _token},
+     success: function (data) {
+     $('#valeurList').fadeIn();
+     $('#valeurList').html(data);
+     }
+     });
+     }
+     });
+     
+     $(document).on('click', 'li', function(){
+     $('#detailplvFournisseur').val($(this).text());
+     $('#valeurList').fadeOut();
+     });*/
+</script>
+<script>
+    $('#form-data').on('keyup keypress', function (e) {
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+
     //script pour lier les listes
     $("#manager").change(function () {
         var groupeManager = $('option:selected', this).attr('groupe');
@@ -257,6 +367,7 @@ $nbrfourni = count($fourni);
 
     function giveSelection(selectedValue) {
         assistant.innerHTML = '';
+        assistant.append(new Option());
         for (var i = 0; i < options2.length; i++) {
             if (options2[i].dataset.option === selectedValue) {
                 assistant.appendChild(options2[i]);
@@ -264,6 +375,21 @@ $nbrfourni = count($fourni);
         }
     }
     giveSelection(manager.value);
+
+    var rem = document.querySelector('#remise');
+    function typeOfRemise(valRemise) {
+        if (valRemise === "Remise directe") {
+            $('#fileupload1').hide();
+            $('#fileupload2').hide();
+
+        } else {
+            $('#fileupload1').show();
+            $('#fileupload2').show();
+
+        }
+
+    }
+
 
 </script>
 

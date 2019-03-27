@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 
-class FournisseurController extends Controller {
+class intituleActionController extends Controller {
 
     public function register(Request $request) {
         $nom_fourni = $request->input('fournisseur_nom');

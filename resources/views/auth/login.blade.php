@@ -5,10 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <br/>
-                <h3 style="text-align:center;">Connexion</h3>
-                <hr>
                 <div class="card-body">
+                    <h4 class="text-center p-1">Connexion</h4>
+                    <hr>
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 

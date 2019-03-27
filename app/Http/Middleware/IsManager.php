@@ -12,7 +12,7 @@ class IsManager
      */
     public function handle($request, Closure $next)
     {
-        if(auth()->user()->isAdmin() or auth()->user()->groupe=='1') {
+        if(auth()->user()->isAdmin() or auth()->user()->type=='manager' or auth()->user()->type=='assistant') {
             return $next($request);
         }
         return redirect('home');
