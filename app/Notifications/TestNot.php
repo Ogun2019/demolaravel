@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class destroyAction extends Notification
+class TestNot extends Notification
 {
     use Queueable;
 
@@ -16,10 +16,9 @@ class destroyAction extends Notification
      *
      * @return void
      */
-    public $id;
-    public function __construct($id)
+    public function __construct()
     {
-        $this->id=$id;
+        //
     }
 
     /**
@@ -42,7 +41,9 @@ class destroyAction extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('L\'action id : '.$this->id.' a été supprimé !');
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**

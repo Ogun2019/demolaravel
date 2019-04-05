@@ -16,7 +16,6 @@
         <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
         <!--<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>-->
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
         <!--<link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css" rel="stylesheet" type="text/css">-->
@@ -32,12 +31,12 @@
         <script src="js/semantic.min.js"></script>-->
     </head>
     <body id="test"><!--  style="background-color: #eaeaea;" -->
-        <!--@if(Request::url() === 'http://monappli:3232/home')
+        @if(Request::url() === 'http://monappli:3232/home')
         <script type="text/javascript">
             $("html").prepend('<div id="loader" class="spinner-border text-danger" role="status"><span class="sr-only">Loading...</span></div>');
-            $('#test').hide();
+            //$('#test').hide();
         </script>
-        @endif-->
+        @endif
         <div id="app">
             <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
                 <div class="container">
@@ -69,7 +68,7 @@
                             </li>
                             @endif          
                             @if(Auth::user()->type=='manager' or Auth::user()->type=='admin' or Auth::user()->type=='assistant')
-                            <a class="nav-link" href="/manager">Manager page</a>
+                            <a class="nav-link" href="/manager">Ajout action</a>
                             @endif
                             @if (Auth::user()->type=='admin' or Auth::user()->type=='serviceclient')
                             <a class="nav-link" href="/service_client">Service client</a>
@@ -77,9 +76,9 @@
                             @if (Auth::user()->type=='admin' or Auth::user()->type=='servicecomm')
                             <a class="nav-link" href="/service_communication">Service communication</a>
                             @endif
-                            @if (Auth::user()->type=='admin' or Auth::user()->type=='web')
+                            <!--@if (Auth::user()->type=='admin' or Auth::user()->type=='web')
                             <a class="nav-link" href="/pweb">Web</a>
-                            @endif
+                            @endif-->
                             @endauth
                         </ul>
 
@@ -102,6 +101,10 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="/user/profile">
+                                      Profile
+                                    </a>
+                                    
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                document.getElementById('logout-form').submit();">

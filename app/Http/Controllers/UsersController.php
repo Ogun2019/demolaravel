@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller {
 
     public function __construct() {
         $this->middleware('auth');
     }
-    
+
     public function manager() {
         $user_groupe = DB::table('users as us1')
                 ->join('users as us2', 'us1.id', '=', 'us2.sup')
@@ -38,8 +39,8 @@ class UsersController extends Controller {
                             'AdminController@show'
             );
         } catch (\Exception $e) {
-           
-            return abort(403, 'Cet utilisateur est manager/assistant d\'une action. Supprimer d\'abord tous les actions paramétrées par celui-ci.' );
+
+            return abort(403, 'Cet utilisateur est manager/assistant d\'une action. Supprimer d\'abord tous les actions paramétrées par celui-ci.');
         }
 
 
@@ -56,6 +57,45 @@ class UsersController extends Controller {
             'sup' => $request->input('idsup')
         ]);
         return redirect()->action('AdminController@show');
+    }
+
+    public function testlogs() {
+        $audits = User::find(1)->audits;
+        return view('logstest')->compact('audits');
+    }
+
+    public function saveUserProfile(Request $request) {
+        $user = Auth::user();
+        $extensions = ['jpg', 'jpeg', 'png'];
+        $isImage = $request->file('profilePicture')->getClientOriginalExtension();
+
+        if (in_array($isImage, $extensions)) {
+            //DB::table('users')->update(['profileImage' => $request->file('profilePicture')->getClientOriginalName()])->where("id", auth()->user()->id);
+            DB::table('users')->where('id', $user->id)->update([
+                'profileImage' => $request->file('profilePicture')->getClientOriginalName()
+            ]);
+
+            $request->file('profilePicture')->storeAs('public', $request->file('profilePicture')->getClientOriginalName());
+            //$request->file('profilePicture')->store('uploads');
+        }
+        return redirect('/user/profile');
+    }
+    
+    public function saveUserParam(Request $request) {
+        DB::table('users')->where('id', $request->userid)->update([
+                'notification' => $request->valeur
+            ]);
+        return $request->valeur;
+    }
+    public function saveNotifTimeParam(Request $request) {
+        try{
+        DB::table('users')->where('id', $request->userid)->update([
+                'notification_time' => $request->valeur
+            ]);
+        return "ok";
+        } catch (Exception $ex){
+            return $ex + "not work";
+        }
     }
 
 }

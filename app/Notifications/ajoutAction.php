@@ -8,8 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use DB;
 
-class test extends Notification
-{
+class ajoutAction extends Notification implements ShouldQueue {
+
     use Queueable;
 
     /**
@@ -17,9 +17,17 @@ class test extends Notification
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
+    public $idaction;
+    public function __construct($idact,$param) {
+        if ($param == "0") {
+            $this->idaction = $idact;
+        }else{
+            $this->idaction = $idact;
+            $when = new \DateTime();
+            $when->setTime(9, 00);
+            $when->modify('+1 day');
+            $this->delay($when);
+        }
     }
 
     /**
@@ -28,8 +36,7 @@ class test extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via($notifiable)
-    {
+    public function via($notifiable) {
         return ['mail'];
     }
 
@@ -39,13 +46,11 @@ class test extends Notification
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable)
-    {
+    public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line('Une nouvelle action a été ajouté !')
-                    ->action('Cliquez pour voir', url('/home'))
-                    ->line('identifiant de l\'action : '.$id = DB::getPdo()->lastInsertId());
-        
+                        ->line('Une nouvelle action a été ajouté !')
+                        ->action('Cliquez pour voir', url('/home'))
+                        ->line('identifiant de l\'action : ' . $id = $this->idaction);
     }
 
     /**
@@ -54,10 +59,10 @@ class test extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
-    {
+    public function toArray($notifiable) {
         return [
-            //
+                //
         ];
     }
+
 }

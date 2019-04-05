@@ -46,18 +46,24 @@ $date = strftime("%d-%M-%y");
                     @for($i=0;$i<$nbrAct;$i++)
                     @if(auth()->user()->id != $action[$i]->id_expediteur)
                     <div class="incoming_msg p-2">
-                        <div class="incoming_msg_img"> <img class="img-fluid" src="/svg/user.png" alt="userImage"> </div>
+                        <div class="incoming_msg_img">
+                            @if($action[$i]->profileImage==null)
+                            <img class="img-fluid" src="../svg/user.png" alt="userImage">
+                            @else
+                            <img class="img-fluid" src="../storage/{{$action[$i]->profileImage}}"> 
+                            @endif
+                        </div>
                         <div class="received_msg">
                             <div class="received_withd_msg">
                                 <p>{{$action[$i]->commentaire}}</p>
-                                <span class="time_date">Envoyé à {{date("H:i", strtotime($action[$i]->date_message))}}    |    {{date("d-m-Y", strtotime($action[$i]->date_message))}} par {{ucfirst($action[$i]->name)}} email: {{$action[$i]->email}}</span></div>
+                                <span class="time_date">Envoyé à {{date("H:i", strtotime($action[$i]->date_message))}}    | le   {{date("d-m-Y", strtotime($action[$i]->date_message))}} par {{ucfirst($action[$i]->name)}} email: {{$action[$i]->email}}</span></div>
                         </div>
                     </div>
                     @else
                     <div class="outgoing_msg p-2">
                         <div class="sent_msg">
                             <p>{{$action[$i]->commentaire}}</p>
-                            <span class="time_date">Envoyé à {{date("H:i", strtotime($action[$i]->date_message))}}    |    {{date("d-m-Y", strtotime($action[$i]->date_message))}} par {{ucfirst($action[$i]->name)}} email: {{$action[$i]->email}}</span>
+                            <span class="time_date">Envoyé à {{date("H:i", strtotime($action[$i]->date_message))}}    | le  {{date("d-m-Y", strtotime($action[$i]->date_message))}} par {{ucfirst($action[$i]->name)}} email: {{$action[$i]->email}}</span>
                         </div>
                     </div>
                     @endif

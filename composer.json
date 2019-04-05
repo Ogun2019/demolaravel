@@ -9,12 +9,15 @@
     "license": "MIT",
     "require": {
         "php": "^7.1.3",
+        "barryvdh/laravel-async-queue": "^0.7.2",
         "caouecs/laravel-lang": "~3.0",
         "fideloper/proxy": "^4.0",
-        "laravel/framework": "5.7.*",
+        "laravel/framework": "5.8.*",
         "laravel/passport": "^7.1",
         "laravel/tinker": "^1.0",
-        "laravelcollective/html": "^5.7"
+        "laravelcollective/html": "^5.7",
+        "owen-it/laravel-auditing": "^9.0",
+        "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

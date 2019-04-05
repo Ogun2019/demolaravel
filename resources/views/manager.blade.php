@@ -108,7 +108,6 @@ $nbruserg = count($usergroupe);
                                         <option value="C11">C11</option>
                                         <option value="C12">C12</option>
                                         <option value="Pas en catalogue : instore & web">Pas en catalogue : instore & web</option>
-                                        <option value="Exclu web">Exclu web</option>
                                     </select>
                                     <!--<input class="form-control" type="text" id="presenceCat" name="presenceCat" placeholder="oui / non (préciser) Ex: C001 :" required>-->
                                     <b class="form-text text-danger" id="presenceCatError"></b>
@@ -179,23 +178,23 @@ $nbruserg = count($usergroupe);
                             <h4 class="text-center p-1">Achat/détails des offres - Étape 3/4</h4>
                             <hr>
                             <div class="form-row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-xl-6 mb-3">
                                     <label for="detailAction" class="required">Détails et conditions de l'action
                                         bien préciser collection / catégorie / licence et ou références concernées par l'action
                                         préciser également les exclusions si il y en a :</label>
                                     <input class="form-control" id="detailAction" name="detailAction" type="text" placeholder="Détails et conditions de l'action" required>
                                     <b class="form-text text-danger" id="detailActionError"></b>
                                 </div>
-                                <div class="col-md-6 mb-3 mt-4">
+                                <div class="col-xl-6 mb-3 mt-4">
                                     <label for="numPageCat">Numéro de la page en catalogue :</label>
                                     <input id="numPageCat" class="form-control" type="number"name="numPageCat" placeholder="Numéro de la page en catalogue" required>
                                     <b class="form-text text-danger" id="numPageCatError"></b>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-xl-6 mb-3">
                                     <label for="offreCadeau" class="required">Si offre cadeau, Quantités limitées ?(quantités à disposition) :</label>
                                     <input class="form-control" id="offreCadeau" type="number" name="offreCadeau" placeholder="Si offre cadeau, Qtés limitées ?(quantités à disposition):">
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-xl-6 mb-3">
                                     <label for="remise" class="required">Remise directe ou différée :</label>
                                     <select class="custom-select" name="remise" id="remise" onchange="typeOfRemise(this.value)" required>
                                         <option value="">Selectionner la remise</option>
@@ -203,12 +202,12 @@ $nbruserg = count($usergroupe);
                                         <option value="Remise différée">Remise différée</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-xl-6 mb-3">
                                     <label for="interventionMax" class="required">Intervention Maxi Toys/ intervention fournisseur :</label>
                                     <input class="form-control" type="text" id="interventionMax" name="interventionMax" placeholder="préciser le type d'intervention" required="">
                                     <b class="form-text text-danger" id="interventionMaxError"></b>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-xl-6 mb-3">
                                     <label for="commentaire" class="required">Commentaire :</label>
                                     <input class="form-control" id="commentaire" type="text" name="commentaire" placeholder="commentaire">
                                 </div>
@@ -223,11 +222,6 @@ $nbruserg = count($usergroupe);
                             <hr>
                             <div class="form-row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="plvFournisseur" class="required">PLV Fournisseur oui/non :</label>
-                                    <input class="form-control" id="plvFournisseur" type="text" name="plvFournisseur" placeholder="PLV Fournisseur oui/non" required>
-                                    <b class="form-text text-danger" id="plvFournisseurError"></b>
-                                </div>
-                                <div class="col-md-6 mb-3">
                                     
                                         <label for="detailplvFournisseur">Détail PLV Fournisseur: </label>
                                         <input class="form-control" id="detailplvFournisseur" type="text" name="detailplvFournisseur" placeholder="Typologie de PLV : wobblers / A4 / flyers différés ..." required>
@@ -239,7 +233,7 @@ $nbruserg = count($usergroupe);
                                     <input class="form-control" id="detailplvFournisseur" type="text" name="detailplvFournisseur" placeholder="Typologie de PLV : wobblers / A4 / flyers différés ..." required>
                                     <b class="form-text text-danger" id="detailplvFournisseurError"></b>-->
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <!--<div class="col-md-6 mb-3">
                                     <label for="" class="required">F1 :</label>
                                     <input class="form-control" id="f1" type="text" name="f1" placeholder="Quelle typologie doit recevoir cette PLV ?">  
                                 </div>
@@ -254,7 +248,7 @@ $nbruserg = count($usergroupe);
                                 <div class="col-md-6 mb-3">
                                     <label for="f4" class="required">F4 :</label>
                                     <input class="form-control" id="f4" type="text" name="f4" placeholder="Quelle typologie doit recevoir cette PLV ?">
-                                </div>
+                                </div>-->
                                 <div class="col-md-6 mb-3">
                                     <label for="quantite_plv" class="required">Quantités PLV commandables :</label>
                                     <input class="form-control" id="quantite_plv" type="number" name="quantite_plv" placeholder="Quelles sont les quantités de PLV que le fournisseur nous mets à disposition?">
@@ -270,10 +264,27 @@ $nbruserg = count($usergroupe);
                                     <input class="form-control" id="contactPlv" type="text" name="contact_plv" placeholder="À qui doit on passer commande de cette PLV?">
                                     <b class="form-text text-danger" id="contactPlvError"></b>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-12 mb-3">
                                     <label for="commentairePlv" class="required">Commentaire PLV :</label>
-                                    <input class="form-control" id="commentairePlv" type="text" name="comm_plv" placeholder="Quelle typologie doit recevoir cette PLV ?">
+                                    <textarea  class="form-control" id="commentairePlv" type="text" name="comm_plv" placeholder="Quelle typologie doit recevoir cette PLV ?"></textarea>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="plvFournisseur" class="required" >PLV Fournisseur oui/non :</label><br/>
+                                    <input type="radio" id="plvFournisseur" name="plvFournisseur" value="Oui">Oui<br/>
+                                    <input type="radio" name="plvFournisseur" id="plvFournisseur" value="Non">Non
+                                    <!--<label for="plvFournisseur" class="required">PLV Fournisseur oui/non :</label>
+                                    <input class="form-control" id="plvFournisseur" type="text" name="plvFournisseur" placeholder="PLV Fournisseur oui/non" required>
+                                    <b class="form-text text-danger" id="plvFournisseurError"></b>-->
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <input name="validiteAction1" type="checkbox" value="Exclu web">Exclu web</input>
+                                </div> 
+                                <div class="col-md-6 mb-3">
+                                    <input name="validiteAction2" type="checkbox" value="Produits exclusifs web">Produits exclusifs web</input>
+                                </div> 
+                                <div class="col-md-6 mb-3">
+                                    <input name="validiteAction3" type="checkbox" value="Exclusion habituelle promotions">Exclusion habituelle promotions</input>
+                                </div> 
                                 <div id="fileupload1" class="col-md-6 mb-3">
                                     <label for="flyerFile">Lien Visuel Flyer différé:</label><br/>
                                     <input type="file" id="flyerFile" name="flyerFile" size="50">
@@ -303,47 +314,49 @@ $nbruserg = count($usergroupe);
 </div>
 
 <script>
-    var options = {
+    var auto = {
         url: "{{route('autocomplete.fetch')}}",
-
         getValue: "details_action",
-
         list: {
             match: {
                 enabled: true
             }
         }
     };
-    $("#detailplvFournisseur").easyAutocomplete(options);
-    $('#detailAction').easyAutocomplete(options);
-
-    /*$("#detailplvFournisseur").autocomplete({
-     
-     source: //"{{route('autocomplete.fetch')}}"
-     });*/
-
-
-    /*$('#detailplvFournisseur').keyup(function () {
-     var query = $(this).val();
-     if (query != '')
-     {
-     var _token = $('input[name="_token"]').val();
-     $.ajax({
-     url: "{{ route('autocomplete.fetch') }}",
-     method: "POST",
-     data: {query: query, _token: _token},
-     success: function (data) {
-     $('#valeurList').fadeIn();
-     $('#valeurList').html(data);
-     }
-     });
-     }
-     });
-     
-     $(document).on('click', 'li', function(){
-     $('#detailplvFournisseur').val($(this).text());
-     $('#valeurList').fadeOut();
-     });*/
+    var auto2 = {
+        url: "/autocomplete/autoDetail_plv_fournisseur",
+        getValue: "detail_plv_fournisseur",
+        list: {
+            match: {
+                enabled: true
+            }
+        }
+    };
+    var auto3 = {
+        url: "/autocomplete/autointervention",
+        getValue: "intervention",
+        list: {
+            match: {
+                enabled: true
+            }
+        }
+    };
+    
+    var auto4 = {
+        url: "/autocomplete/autoCommentaire",
+        getValue: "commentaire",
+        list: {
+            match: {
+                enabled: true
+            }
+        }
+    };
+   
+    $('#detailAction').easyAutocomplete(auto);
+    $("#detailplvFournisseur").easyAutocomplete(auto2);
+    $("#interventionMax").easyAutocomplete(auto3);
+    $("#commentaire").easyAutocomplete(auto4);
+    
 </script>
 <script>
     $('#form-data').on('keyup keypress', function (e) {

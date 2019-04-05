@@ -40,6 +40,7 @@ Route::get('login', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/test', 'HomeController@testAjax');
 
 Route::get('/admin', 'AdminController@show')->middleware('is_admin')->name('admin');
 Route::get('/manager', 'UsersController@manager')->middleware('is_manager')->name('manager');
@@ -57,16 +58,13 @@ Route::post('/achat/suppression', 'AchatDetailsController@destroy');
 
 Route::get('/service_client', 'ServiceClientController@show')->middleware('is_sclient');
 Route::get('/service_communication', 'ServiceCommController@show')->middleware('is_scomm');
-Route::get('pweb', function () {
+/*Route::get('pweb', function () {
     return view('pweb');
-})->middleware('is_pweb');
+})->middleware('is_pweb');*/
 Route::post('/service_client', 'ServiceClientController@create');
 Route::post('/service_communication', 'ServiceCommController@create');
-Route::post('/pweb', 'PwebController@create');
-
-Route::get('/timeline', function() {
-    return view('timeline');
-});
+//Route::post('/pweb', 'PwebController@create');
+Route::get('/timeline', 'HomeController@loadTimeline');
 Route::post('/editTimeline', 'AchatDetailsController@editTimeline');
 Route::post('/editTab', 'AchatDetailsController@updateData')->name('update_data');
 Route::get('/logs', function() {
@@ -83,3 +81,14 @@ Route::post('/saveDatatableState', 'DatatableController@saveState');
 Route::post('/loadDatatableState', 'DatatableController@loadState');
 Route::get('/autocomplete', 'AutocompleteController@index');
 Route::get('/autocomplete/fetch', 'AutocompleteController@fetch')->name('autocomplete.fetch');
+Route::get('/autocomplete/autoDetail_plv_fournisseur', 'AutocompleteController@autoDetail_plv_fournisseur');
+Route::get('/autocomplete/autointervention', 'AutocompleteController@autoIntervention');
+Route::get('/autocomplete/autoCommentaire', 'AutocompleteController@autoCommentaire');
+Route::get('/user/profile', function() {
+    $id = \Auth::user()->id;
+    $userinfo = DB::table('users')->where('id', $id)->get();
+    return view('profile',compact('userinfo'));
+});
+Route::post('/user/saveProfile', 'UsersController@saveUserProfile');
+Route::post('/user/saveNotifParam', 'UsersController@saveUserParam');
+Route::post('/user/saveNotifTimeParam', 'UsersController@saveNotifTimeParam');

@@ -1,14 +1,4 @@
-<?php
-$achat_details = DB::table('achat_details_des_offres')
-        ->join('details_des_offres', 'details_des_offres.id_achat_details_fk', '=', 'achat_details_des_offres.id_achat_details')
-        ->join('users as us1', 'us1.id', '=', 'details_des_offres.id_user_fk')
-        ->join('users as us2', 'us1.id', '=', 'us2.sup')
-        ->join('fournisseur', 'fournisseur.id_fournisseur', '=', 'achat_details_des_offres.fournisseur_id_fk')
-        ->select('achat_details_des_offres.*', 'us1.name as nameman', 'us2.name as nameass', 'details_des_offres.*', 'fournisseur.*')
-        ->groupBy('id_achat_details')
-        ->get();
-$actions = json_decode(json_encode($achat_details), True);
-?>
+
 
 @push('scripts')
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -185,7 +175,7 @@ foreach ($actions as $action):
     ?>
             {
             id: '<?php echo $action['id_achat_details']; ?>',
-                    title: '<?php echo " id :" . $action['id_achat_details'] . " " . $action['intitule_action'] . " " . $start1 . "/" . $end1 . " " . "cat: " . $action['presence_cat']; ?>',
+                    title: '<?php echo " id :" . $action['id_achat_details'] . " " . $action['nom_action'] . " " . $start1 . "/" . $end1 . " " . "cat: " . $action['presence_cat']; ?>',
                     start: '<?php echo $start; ?>',
                     end: '<?php echo $end; ?>',
                     color: '<?php echo $action['color']; ?>'

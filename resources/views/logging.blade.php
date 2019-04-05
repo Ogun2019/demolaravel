@@ -28,7 +28,7 @@ $logsNbr = count($logs);
                 <th scope="col">Email</th>
                 <th scope="col">Opération</th>
                 <th scope="col">Action id modifié</th>
-                <th scope="col">Intitulé action</th>
+                <th scope="col">Avant la modification</th>
                 <th scope="col">Colonne modifié</th>
                 <th scope="col">Modifé par</th>
             </tr>
@@ -51,6 +51,5 @@ $logsNbr = count($logs);
     </table>
 
 </div>
-
 
 @endsection

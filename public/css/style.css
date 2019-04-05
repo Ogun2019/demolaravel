@@ -95,6 +95,7 @@ span.fc-title {
     left: 50%;
     margin-left: -50px;
     margin-top: -50px;
+    z-index: 3;
 }
 
 /******* css discussion ******/
@@ -210,9 +211,57 @@ span.fc-title {
 
 /*autocomplete input*/
 .easy-autocomplete{
-  width:100% !important
+    width:100% !important
 }
 
 .easy-autocomplete input{
-  width: 100%;
+    width: 100%;
+}
+
+.dataTables_filter {
+    float: right !important;
+}
+
+.ui.stackable.pagination.menu{
+    float: right !important;
+}
+
+.navbar-light .navbar-nav .show > .nav-link, .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .nav-link.active {
+    color: rgb(255, 255, 255);
+}
+
+/* profile utilisateur */
+.image-container {
+    position: relative;
+}
+
+.image {
+    opacity: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: .5s ease;
+    backface-visibility: hidden;
+}
+
+.middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.image-container:hover .image {
+    opacity: 0.3;
+}
+
+.image-container:hover .middle {
+    opacity: 1;
+}
+#testblur{
+    filter: blur(8px);
 }

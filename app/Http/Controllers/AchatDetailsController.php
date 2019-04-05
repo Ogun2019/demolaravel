@@ -6,16 +6,23 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\User;
-use App\Notifications\test;
-use App\Notifications\updateAction;
-use App\Notifications\destroyAction;
+use App\Notifications\ajoutAction;
+use App\Notifications\modificationAction;
+use App\Notifications\suppressionAction;
+use App\Notifications\nouveauCommentaire;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Log;
+use Illuminate\Support\Facades\Notification;
+use Symfony\Component\Process\Process;
 
 class AchatDetailsController extends Controller {
+
+    public function __construct() {
+        $this->middleware('auth');
+    }
 
     public function create(Request $request) {
         switch ($request->input('presenceCat')) {
@@ -53,6 +60,13 @@ class AchatDetailsController extends Controller {
         if ($request->hasFile('plvFile')) {
             $request->file('plvFile')->store('uploads');
         }
+        if ($request->input('validiteAction2') == null && $request->input('validiteAction3') == null) {
+            $dropshipment = $request->input('validiteAction1');
+        } else {
+            $dropshipment = $request->input('validiteAction1') . "|" . $request->input('validiteAction2') . "|" . $request->input('validiteAction3');
+        }
+
+
         //Storage::putFile('public',$request->file('flyerFile')); //upload file
         //$nextId = DB::table('achat_details_des_offres')->max('id_achat_details') + 1;
         $statement = DB::select("SHOW TABLE STATUS LIKE 'achat_details_des_offres'");
@@ -65,17 +79,6 @@ class AchatDetailsController extends Controller {
             return response()->json(['error' => 'Champs manager est obligatoire'], 401);
             //return response()->view("errorPage");
         }
-
-        DB::table('details_des_offres')->insert([
-            [
-                'date_creation' => $date,
-                'id_user_fk' => $request->input('grp'),
-                'id_achat_details_fk' => $nextId,
-                'assistant_d' => $request->input('assistantName'),
-            //'id_achat_details_fk' => $request->input('uniqueid'),
-            ]
-        ]);
-
 
         $validator = Validator::make($request->all(), [
                     'datef' => 'required|after:dated',
@@ -106,7 +109,6 @@ class AchatDetailsController extends Controller {
             return response()->json(['error' => $validator->errors()], 401);
             //return response()->view("errorPage");
         }
-
         DB::table('achat_details_des_offres')->insert([
             [
                 //'date' => $date,
@@ -142,9 +144,22 @@ class AchatDetailsController extends Controller {
                 'date_livraison_logitoys' => $request->input('date_liv_logitoys'),
                 'commentaire_plv' => $request->input('comm_plv'),
                 'contact_plv' => $request->input('contact_plv'),
+                'validite_action1' => $dropshipment, //line 56
                 'color' => $couleur,
             ]
         ]);
+
+
+        DB::table('details_des_offres')->insert([
+            [
+                'date_creation' => $date,
+                'id_user_fk' => $request->input('grp'),
+                'id_achat_details_fk' => $nextId,
+                'assistant_d' => $request->input('assistantName'),
+            //'id_achat_details_fk' => $request->input('uniqueid'),
+            ]
+        ]);
+
         $record['log'] = [
             'user_id' => auth()->user() ? auth()->user()->id : NULL,
             'user_name' => auth()->user()->name,
@@ -165,17 +180,28 @@ class AchatDetailsController extends Controller {
                 'action_id' => $nextId,
                 'intitule_a' => $request->input('intituleAction'),
             ]
-        ]); 
-        
-        
+        ]);
+
+
         /*
          * autocomplete new suggestion
          */
-        
+
         DB::table('autocomplete_info')->insert([
             ['valeur' => $request->input('detailplvFournisseur')]
         ]);
-       
+
+        $users = User::all();
+        foreach ($users as $use) {
+            if ($use->notification == 'checked') {
+                if ($use->notification_time == 'true') {
+                    Notification::send($use, new ajoutAction($nextId,"0"));
+                }else{
+                    Notification::send($use, new ajoutAction($nextId,"1"));
+                }
+            }
+        }
+
 
         /* $user = Auth::user();
           $Log=Log::channel('ajoutachat');
@@ -233,6 +259,18 @@ class AchatDetailsController extends Controller {
                         'colonne_v' => $request->column_value,
                     ]
                 ]);
+                $users = User::all();
+                foreach ($users as $use) {
+                    if ($use->notification == 'checked') {
+                        if ($use->notification_time == 'true') {
+                            Notification::send($use, new modificationAction($use,$request->id,"0"));
+                        }else{
+                            Notification::send($use, new modificationAction($use,$request->id,"1"));
+                        }
+                    }
+                }
+                /*$process = new PhpProcess('php ' . base_path('artisan queu:work'));
+                $process->start();*/
             } else {
                 echo 'vide';
             }
@@ -264,6 +302,7 @@ class AchatDetailsController extends Controller {
 
     public function destroy(Request $request) {
         $act = DB::select("select * from achat_details_des_offres where id_achat_details = " . $request->input('btn-supp-achat'));
+        $action['all'] = $act;
         $ldate = date('Y-m-d H:i:s');
         $record['log'] = [
             'user_id' => auth()->user() ? auth()->user()->id : NULL,
@@ -280,8 +319,9 @@ class AchatDetailsController extends Controller {
         $Log = Log::channel('destroyachat');
         $Log->pushHandler(new StreamHandler(storage_path('logs/destroyAchat.log')), Logger::INFO);
         $Log->info("/**** action ajouté par :", compact('user'));
-        $Log->info(["Information de l\action *** *///: " => $request]);
+        $Log->info(["Information de l\'action *** *///: " => $request]);
         $Log->info($record['log']);
+        $Log->info($action['all']);
 
         DB::table('logs')->insert([
             [
@@ -294,10 +334,23 @@ class AchatDetailsController extends Controller {
                 'intitule_a' => $act[0]->intitule_action,
             ]
         ]);
-
+        $actionid=$request->input('btn-supp-achat');
         DB::table('achat_details_des_offres')->where('id_achat_details', '=', $request->input('btn-supp-achat'))->delete();
         DB::table('details_des_offres')->where('id_achat_details_fk', '=', $request->input('btn-supp-achat'))->delete();
-        (new User)->forceFill(['name' => 'Maxi Toys', 'email' => 'demonstration@demonstration.be',])->notify(new destroyAction($request->input('btn-supp-achat')));
+        $users = User::all();
+        foreach ($users as $use) {
+            if ($use->notification == 'checked') {
+                if ($use->notification_time == 'true') {
+                     Notification::send($use, new suppressionAction($actionid,"0"));
+                } else {
+                     Notification::send($use, new suppressionAction($actionid,"1"));
+                }
+            }
+        }
+        /*$process = new PhpProcess('php ' . base_path('artisan queu:work --stop-when-empty'));
+        $process->start();*/
+
+        //(new User)->forceFill(['name' => 'Maxi Toys', 'email' => 'demonstration@demonstration.be',])->notify(new destroyAction($request->input('btn-supp-achat')));
         return redirect()->action('HomeController@index');
     }
 
@@ -322,6 +375,17 @@ class AchatDetailsController extends Controller {
                 'date_message' => $ldate
             ]
         ]);
+        $users = User::all();
+        foreach ($users as $use) {
+            if ($use->notification == 'checked') {
+                Notification::send($use, new nouveauCommentaire($request->input("btn-comment-userid"), $request->input("idaction")));
+            }
+        }
+        //$process = new PhpProcess(base_path('php artisan queu:work'));
+        //$process = exec("php " . base_path("artisan queu:work --stop-when-empty > /dev/null &"));
+        //$process = new Process('php ../artisan queu:work --stop-when-empty');
+        //$process->start();
+        //Artisan::call('queue:work', ['--stop-when-empty' => true]);
         return redirect()->action('AchatDetailsController@showComment', [$request->input("idaction")]);
     }
 
